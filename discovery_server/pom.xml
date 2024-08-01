@@ -12,7 +12,7 @@
 	<artifactId>discovery_server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>discovery_server</name>
-	<description>Discovery service (eureka)</description>
+	<description>Discovery for Spring Boot Application</description>
 	<url/>
 	<licenses>
 		<license/>
