@@ -3,11 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>projeto-esofii</groupId>
     <artifactId>projeto-esofii</artifactId>
-    <version>0.0.1-SNASHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>projeto-esofii</name>
 
     <modules>
         <module>config_server</module>
+        <module>discovery_server</module>
     </modules>
 </project>
