@@ -12,7 +12,7 @@
 	<artifactId>config_server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>config_server</name>
-	<description>Config Server</description>
+	<description>Servidor de configuração da aplicação</description>
 	<url/>
 	<licenses>
 		<license/>
