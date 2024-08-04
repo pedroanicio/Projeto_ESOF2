@@ -10,5 +10,6 @@
     <modules>
         <module>config_server</module>
         <module>discovery_server</module>
+        <module>api_gateway</module>
     </modules>
 </project>
