@@ -9,7 +9,9 @@
 
     <modules>
         <module>config_server</module>
-        <module>discovery_server</module>
         <module>api_gateway</module>
+        <module>discovery_server</module>
+        <module>conversion_service</module>
+        <module>cambio_service</module>
     </modules>
 </project>
