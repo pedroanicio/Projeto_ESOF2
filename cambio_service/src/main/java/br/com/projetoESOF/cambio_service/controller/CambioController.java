@@ -40,7 +40,7 @@ public class CambioController {
 
         logger.info("getCambio is caller with -> {}, {} and {}", amount, from, to);
         var cambio = repository.findByFromAndTo(from, to);
-        if (cambio == null) throw new RuntimeException("Currency Unsuported."); //moeda nao suportada
+        if (cambio == null) throw new RuntimeException("Currency Unsuported."); //cambio nao suportado
 
         var port = environment.getProperty("local.server.port");
 
