@@ -13,5 +13,6 @@
         <module>discovery_server</module>
         <module>conversion_service</module>
         <module>cambio_service</module>
+        <module>length_service</module>
     </modules>
 </project>
