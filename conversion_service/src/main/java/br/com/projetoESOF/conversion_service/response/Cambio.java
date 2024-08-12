@@ -1,7 +1,6 @@
 package br.com.projetoESOF.conversion_service.response;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Cambio implements Serializable {
