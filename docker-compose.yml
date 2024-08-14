@@ -1,0 +1,181 @@
+version: '3.8'
+
+services:
+  config-server:
+    image: pedroanciodev/config_server:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: config_server/Dockerfile
+    environment:
+      - SPRING_APPLICATION_NAME=config-server
+      - SERVER_PORT=8888
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://gitlab.com/pedroanicio/projeto_esof2/-/tree/main/config_server
+    ports:
+      - "8888:8888"
+    expose:
+      - "8888"
+    networks:
+      - pedro-network
+
+  conversion-db:
+    image: mysql:latest
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: conversion_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - 3308:3308
+    expose:
+      - 3308
+    networks:
+      - pedro-network
+
+  cambio-db:
+    image: mysql:latest
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: cambio_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3309
+    ports:
+      - 3309:3309
+    expose:
+      - 3309
+    networks:
+      - pedro-network
+
+  lenght-db:
+    image: mysql:latest
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: lenght_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3310
+    ports:
+      - 3310:3310
+    expose:
+      - 3310
+    networks:
+      - pedro-network
+
+  discovery-server:
+    image: pedroaniciodev/discovery_server:0.0.1-SNAPSHOT
+    restart: always
+    ports:
+      - "8761:8761"
+    expose:
+      - "8761"
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888/discovery-server
+    depends_on:
+      - config-server
+    networks:
+      - pedro-network
+
+  api-gateway:
+    image: pedroaniciodev/api-gateway:0.0.1-SNAPSHOT
+    restart: always
+    ports:
+      - "8765:8765"
+    depends_on:
+      - config-server
+      - discovery-server
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888/api-gateway
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://discovery-server:8761/eureka
+    networks:
+      - pedro-network
+
+  cambio-service:
+    image: pedroaniciodev/cambio_service:0.0.1-SNAPSHOT
+    restart: always
+    build:
+      context: .
+      dockerfile: cambio_service/Dockerfile
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888/cambio-service
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://discovery-server:8761/eureka
+      SPRING.DATASOURCE.URL: jdbc:mysql://cambio-db:3309/cambio_service?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.DATASOURCE.USERNAME: docker
+      SPRING.DATASOURCE.PASSWORD: admin123
+      SPRING.FLYWAY.URL: jdbc:mysql://cambio-db:3309/cambio_service?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.FLYWAY.USER: docker
+      SPRING.FLYWAY.PASSWORD: admin123
+    ports:
+      - "8000:8000"
+    depends_on:
+      - config-server
+      - discovery-server
+      - cambio-db
+    networks:
+      - pedro-network
+
+  length-service:
+    image: pedroaniciodev/length_service:0.0.1-SNAPSHOT
+    restart: always
+    build:
+      context: .
+      dockerfile: length_service/Dockerfile
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888/length-service
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://discovery-server:8761/eureka
+      SPRING.DATASOURCE.URL: jdbc:mysql://lenght-db:3310/lenght_service?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.DATASOURCE.USERNAME: docker
+      SPRING.DATASOURCE.PASSWORD: admin123
+      SPRING.FLYWAY.URL: jdbc:mysql://lenght-db:3310/lenght_service?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.FLYWAY.USER: docker
+      SPRING.FLYWAY.PASSWORD: admin123
+    ports:
+      - "8200:8200"
+    depends_on:
+      - config-server
+      - discovery-server
+      - lenght-db
+    networks:
+      - pedro-network
+
+  conversion-service:
+    image: pedroaniciodev/conversion_service:0.0.1-SNAPSHOT
+    restart: always
+    build:
+      context: .
+      dockerfile: conversion_service/Dockerfile
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888/conversion-service
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://discovery-server:8761/eureka
+      SPRING.DATASOURCE.URL: jdbc:mysql://conversion-db:3308/conversion_service?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.DATASOURCE.USERNAME: docker
+      SPRING.DATASOURCE.PASSWORD: admin123
+      SPRING.FLYWAY.URL: jdbc:mysql://conversion-db:3308/conversion_service?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.FLYWAY.USER: docker
+      SPRING.FLYWAY.PASSWORD: admin123
+    ports:
+      - "8100:8100"
+    depends_on:
+      - config-server
+      - discovery-server
+      - conversion-db
+    networks:
+      - pedro-network
+
+
+networks:
+  pedro-network:
+    driver: bridge
