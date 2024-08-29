@@ -21,10 +21,6 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-variables:
-  MAVEN_CLI_OPTS: "-s .mvn/settings.xml --batch-mode"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
 build_config_server:       # This job runs in the build stage, which runs first.
   stage: build
   image: maven:3.8.5-openjdk-17
