@@ -29,7 +29,8 @@ variables:
 services:
   - docker:dind
 
-image: docker:latest 
+image: docker:latest, maven:3.8.6-openjdk-17  # Imagem com Maven e JDK para construção e testes
+ 
 
 
 before_script:
