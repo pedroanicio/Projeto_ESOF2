@@ -38,7 +38,6 @@ before_script:
 build_config_server:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - ls -la config_server/target 
     - docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_PREFIX/config_server:$DOCKER_TAG -f config_server/Dockerfile .
   only:
     - main
