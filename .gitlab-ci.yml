@@ -21,6 +21,8 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
+image: docker:24.0.2
+
 variables:
   DOCKER_DRIVER: overlay2
 
