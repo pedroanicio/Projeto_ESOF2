@@ -59,6 +59,11 @@ build_api_gateway:
     paths:
       - api_gateway/target/*.jar
 
+build_images:
+  stage: build
+  script:
+    - docker build -t pedroaniciodev/config_server:latest ./config_server
+
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
