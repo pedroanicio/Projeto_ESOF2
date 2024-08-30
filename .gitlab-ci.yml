@@ -20,7 +20,7 @@
 image: maven:3.8.5-openjdk-17-slim
 
 services:
-  - docker:24.0.2
+  - docker:24.0.2-dind
 
 before_script:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
