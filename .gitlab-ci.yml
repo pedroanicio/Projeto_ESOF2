@@ -33,6 +33,16 @@ build_config_server:
     paths:
       - config_server/target/*.jar
 
+build_discovery_server:
+  stage: build
+  script:
+    - cd discovery_server
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - discovery_server/target/*.jar
+
+
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
