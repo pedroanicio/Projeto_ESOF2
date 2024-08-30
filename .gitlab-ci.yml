@@ -45,6 +45,15 @@ build_discovery_server:
     paths:
       - discovery_server/target/*.jar
 
+build_api_gateway:
+  stage: build
+  script:
+    - cd api_gateway
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - api_gateway/target/*.jar
+
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
