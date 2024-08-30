@@ -24,15 +24,6 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-services:
-  - docker:24.0.2-dind
-
-before_script:
-  - apt-get update
-  - apt-get install -y docker.io
-  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
-
-
 build_config_server:
   stage: build
   script:
@@ -41,11 +32,6 @@ build_config_server:
   artifacts:
     paths:
       - config_server/target/*.jar
-
-build_images:
-  stage: build
-  script:
-    - docker build -t pedroaniciodev/config_server:latest ./config_server
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
