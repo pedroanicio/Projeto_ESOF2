@@ -19,16 +19,17 @@
 
 image: maven:3.8.5-openjdk-17-slim
 
-# before_script:
-#   - apt-get update
-#   - apt-get install -y docker.io
-#   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+before_script:
+   - apt-get update
+   - apt-get install -y docker.io
+   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 services:
   - docker:24.0.2-dind
 
 stages:          # List of stages for jobs, and their order of execution
   - build
+  - package
   - test
   - deploy
 
@@ -85,6 +86,12 @@ build_conversion_service:
   artifacts:
     paths:
       - conversion_service/target/*.jar
+
+# Adicionando a etapa de construção de imagens Docker
+package_config_server_image:
+  stage: package
+  script:
+    - docker build -t pedroaniciodev/config_server:latest ./config_server
 
 #build_images:
 #  stage: build
