@@ -19,10 +19,10 @@
 
 image: maven:3.8.5-openjdk-17-slim
 
-before_script:
-  - apt-get update
-  - apt-get install -y docker.io
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+# before_script:
+#   - apt-get update
+#   - apt-get install -y docker.io
+#   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 services:
   - docker:24.0.2-dind
@@ -59,10 +59,20 @@ build_api_gateway:
     paths:
       - api_gateway/target/*.jar
 
-build_images:
+build_cambio_service:
   stage: build
   script:
-    - docker build -t pedroaniciodev/config_server:latest ./config_server
+    - cd cambio_service
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - cambio_service/target/*.jar
+
+
+#build_images:
+#  stage: build
+#  script:
+#    - docker build -t pedroaniciodev/config_server:latest ./config_server
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
