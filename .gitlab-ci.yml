@@ -21,7 +21,7 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-image: docker:24.0.2
+image: maven:3.9.7-openjdk-17-slim
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -31,6 +31,15 @@ services:
 
 before_script:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
+build_config_server:
+  stage: build
+  script:
+    - cd config_server
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - config_server/target/*.jar
 
 build_images:
   stage: build
