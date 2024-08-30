@@ -19,7 +19,8 @@
 image: maven:3.8.5-openjdk-17-slim
 
 variables:
-  DOCKER_HOST: "tcp://localhost:2375"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: "overlay2"
 
 before_script:
    - apt-get update
