@@ -19,11 +19,13 @@
 
 image: maven:3.8.5-openjdk-17-slim
 
+before_script:
+  - apt-get update
+  - apt-get install -y docker.io
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
 services:
   - docker:20.10.7
-
-before_script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 stages:          # List of stages for jobs, and their order of execution
   - build
