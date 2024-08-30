@@ -19,6 +19,9 @@
 
 image: maven:3.8.5-openjdk-17-slim
 
+services:
+  - docker:24.0.2
+
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
