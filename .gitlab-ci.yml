@@ -23,15 +23,6 @@ stages:          # List of stages for jobs, and their order of execution
 
 image: maven:3.9.7-openjdk-17-slim
 
-variables:
-  DOCKER_DRIVER: overlay2
-
-services:
-  - docker:24.0.2-dind
-
-before_script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-
 build_config_server:
   stage: build
   script:
@@ -40,16 +31,6 @@ build_config_server:
   artifacts:
     paths:
       - config_server/target/*.jar
-
-build_images:
-  stage: build
-  script:
-    - docker build -t pedroaniciodev/config_server:latest ./config_server
-    - docker build -t pedroaniciodev/discovery_server:latest ./discovery_server
-    - docker build -t pedroaniciodev/api_gateway:latest ./api_gateway
-    - docker build -t pedroaniciodev/cambio_service:latest ./cambio_service
-    - docker build -t pedroaniciodev/length_service:latest ./length_service
-    - docker build -t pedroaniciodev/conversion_service:latest ./conversion_service
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
