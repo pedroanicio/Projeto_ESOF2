@@ -22,6 +22,9 @@ image: maven:3.8.5-openjdk-17-slim
 services:
   - docker:24.0.2
 
+before_script:
+  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
@@ -54,6 +57,10 @@ build_api_gateway:
     paths:
       - api_gateway/target/*.jar
 
+build_images:
+  stage: build
+  script:
+    - docker build -t pedroaniciodev/config_server:latest ./config_server
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
