@@ -92,6 +92,8 @@ package_config_server_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/config_server:latest ./config_server
+  tags:
+    - docker
 
 #build_images:
 #  stage: build
