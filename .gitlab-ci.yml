@@ -68,6 +68,23 @@ build_cambio_service:
     paths:
       - cambio_service/target/*.jar
 
+build_length_service:
+  stage: build
+  script:
+    - cd length_service
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - length_service/target/*.jar
+
+build_conversion_service:
+  stage: build
+  script:
+    - cd conversion_service
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - conversion_service/target/*.jar
 
 #build_images:
 #  stage: build
