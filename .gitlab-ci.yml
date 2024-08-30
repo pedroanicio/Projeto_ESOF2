@@ -23,7 +23,7 @@ services:
   - docker:24.0.2
 
 before_script:
-  - docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 stages:          # List of stages for jobs, and their order of execution
   - build
