@@ -126,6 +126,10 @@ package_discovery_server_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/discovery_server:latest -f discovery_server/Dockerfile .
+    - docker save pedroaniciodev/discovery_server:latest -o discovery_server.tar
+  artifacts:
+    paths:
+      - discovery_server.tar
   tags:
     - docker
 
@@ -133,6 +137,10 @@ package_api_gateway_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/api_gateway:latest -f api_gateway/Dockerfile .
+    - docker save pedroaniciodev/api_gateway:latest -o api_gateway.tar
+  artifacts:
+    paths:
+      - api_gateway.tar
   tags:
     - docker
 
@@ -140,6 +148,10 @@ package_cambio_service_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/cambio_service:latest -f cambio_service/Dockerfile .
+    - docker save pedroaniciodev/cambio_service:latest -o cambio_service.tar
+  artifacts:
+    paths:
+      - cambio_service.tar
   tags:
     - docker
 
@@ -147,6 +159,10 @@ package_length_service_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/length_service:latest -f length_service/Dockerfile .
+    - docker save pedroaniciodev/length_service:latest -o length_service.tar
+  artifacts:
+    paths:
+      - length_service.tar
   tags:
     - docker
 
@@ -154,13 +170,23 @@ package_conversion_service_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/conversion_service:latest -f conversion_service/Dockerfile .
+    - docker save pedroaniciodev/conversion_service:latest -o conversion_service.tar
+  artifacts:
+    paths:
+      - conversion_service.tar
   tags:
     - docker
 
+# deploy das imagens no docker hub
 deploy-job:
   stage: deploy
   script:
     - docker load -i config_server.tar
+    - docker load -i discovery_server.tar
+    - docker load -i api_gateway.tar
+    - docker load -i cambio_service.tar
+    - docker load -i length_service.tar
+    - docker load -i conversion_service.tar
     - echo "Starting deployment to Docker Hub..."
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - docker push pedroaniciodev/config_server:latest
