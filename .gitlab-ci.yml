@@ -96,13 +96,7 @@ test_cambio_service:
   stage: test
   script:
     - cd cambio_service
-    - mvn test -e -X
-  artifacts:
-    reports:
-      junit: cambio_service/target/surefire-reports/*.xml
-    paths:
-      - cambio_service/target/surefire-reports/
-  when: always
+    - mvn test 
 
 # Adicionando a etapa de construção de imagens Docker
 package_config_server_image:
