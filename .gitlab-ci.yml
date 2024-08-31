@@ -99,6 +99,13 @@ package_config_server_image:
   tags:
     - docker
 
+package_discovery_server_image:
+  stage: package
+  script:
+    - docker build -t pedroaniciodev/discovery_server:latest -f discovery_server/Dockerfile .
+  tags:
+    - docker
+
 #build_images:
 #  stage: build
 #  script:
