@@ -73,7 +73,7 @@ services:
       - pedro-network
 
   discovery-server:
-    image: pedroaniciodev/discovery_server:0.0.1-SNAPSHOT
+    image: pedroaniciodev/discovery_server:latest
     restart: always
     ports:
       - "8761:8761"
@@ -87,7 +87,7 @@ services:
       - pedro-network
 
   api-gateway:
-    image: pedroaniciodev/api-gateway:0.0.1-SNAPSHOT
+    image: pedroaniciodev/api_gateway:latest
     restart: always
     ports:
       - "8765:8765"
@@ -101,7 +101,7 @@ services:
       - pedro-network
 
   cambio-service:
-    image: pedroaniciodev/cambio_service:0.0.1-SNAPSHOT
+    image: pedroaniciodev/cambio_service:latest
     restart: always
     build:
       context: .
@@ -126,7 +126,7 @@ services:
       - pedro-network
 
   length-service:
-    image: pedroaniciodev/length_service:0.0.1-SNAPSHOT
+    image: pedroaniciodev/length_service:latest
     restart: always
     build:
       context: .
@@ -151,7 +151,7 @@ services:
       - pedro-network
 
   conversion-service:
-    image: pedroaniciodev/conversion_service:0.0.1-SNAPSHOT
+    image: pedroaniciodev/conversion_service:latest
     restart: always
     build:
       context: .
