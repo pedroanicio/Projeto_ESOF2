@@ -113,6 +113,27 @@ package_api_gateway_image:
   tags:
     - docker
 
+package_cambio_service_image:
+  stage: package
+  script:
+    - docker build -t pedroaniciodev/cambio_service:latest -f cambio_service/Dockerfile .
+  tags:
+    - docker
+
+package_length_service_image:
+  stage: package
+  script:
+    - docker build -t pedroaniciodev/length_service:latest -f length_service/Dockerfile .
+  tags:
+    - docker
+
+package_conversion_service_image:
+  stage: package
+  script:
+    - docker build -t pedroaniciodev/conversion_service:latest -f conversion_service/Dockerfile .
+  tags:
+    - docker
+
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
