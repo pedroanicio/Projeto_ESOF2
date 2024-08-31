@@ -1,4 +1,4 @@
-package br.com.projetoESOF.cambio_service.controller;
+package br.com.projetoESOF.cambio_service;
 
 import br.com.projetoESOF.cambio_service.model.Cambio;
 import br.com.projetoESOF.cambio_service.repository.CambioRepository;
