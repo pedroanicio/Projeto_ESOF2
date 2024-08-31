@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="discovery_server" />
         <module name="api-gateway" />
+        <module name="discovery_server" />
         <module name="conversion_service" />
-        <module name="config_server" />
         <module name="cambio_service" />
+        <module name="config_server" />
         <module name="length_service" />
       </profile>
     </annotationProcessing>
