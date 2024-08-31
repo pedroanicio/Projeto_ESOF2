@@ -115,6 +115,10 @@ package_config_server_image:
   stage: package
   script:
     - docker build -t pedroaniciodev/config_server:latest -f config_server/Dockerfile .
+    - docker save pedroaniciodev/config_server:latest -o config_server.tar
+  artifacts:
+    paths:
+      - config_server.tar
   tags:
     - docker
 
@@ -156,6 +160,7 @@ package_conversion_service_image:
 deploy-job:
   stage: deploy
   script:
+    - docker load -i config_server.tar
     - echo "Starting deployment to Docker Hub..."
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - docker push pedroaniciodev/config_server:latest
