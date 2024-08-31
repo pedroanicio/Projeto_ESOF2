@@ -42,6 +42,9 @@ build_config_server:
   script:
     - cd config_server
     - mvn clean package -DskipTests
+  rules:
+    - changes:
+        - config_server
   artifacts:
     paths:
       - config_server/target/*.jar
