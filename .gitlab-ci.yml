@@ -153,10 +153,19 @@ package_conversion_service_image:
   tags:
     - docker
 
-
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
+deploy-job:
+  stage: deploy
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - echo "Starting deployment to Docker Hub..."
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - docker push pedroaniciodev/config_server:latest
+    - docker push pedroaniciodev/discovery_server:latest
+    - docker push pedroaniciodev/api_gateway:latest
+    - docker push pedroaniciodev/cambio_service:latest
+    - docker push pedroaniciodev/length_service:latest
+    - docker push pedroaniciodev/conversion_service:latest
+    - echo "Deployment to Docker Hub completed successfully."
+  only:
+    - main  # ou a branch que você deseja que o deploy ocorra
+  tags:
+    - docker
