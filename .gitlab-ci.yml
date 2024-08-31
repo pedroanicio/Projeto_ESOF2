@@ -98,6 +98,18 @@ test_cambio_service:
     - cd cambio_service
     - mvn test 
 
+test_length_service:
+  stage: test
+  script:
+    - cd length_service
+    - mvn test 
+
+test_conversion_service:
+  stage: test
+  script:
+    - cd conversion_service
+    - mvn test 
+
 # Adicionando a etapa de construção de imagens Docker
 package_config_server_image:
   stage: package
