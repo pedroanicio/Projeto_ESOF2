@@ -31,7 +31,7 @@ variables:
   DOCKER_DRIVER: "overlay2"
   DOCKER_TLS_CERTDIR: ""
 
-stages:          # List of stages for jobs, and their order of execution
+stages:          
   - build
   - test
   - package
@@ -197,6 +197,6 @@ deploy-job:
     - docker push pedroaniciodev/conversion_service:latest
     - echo "Deployment to Docker Hub completed successfully."
   only:
-    - main  # ou a branch que você deseja que o deploy ocorra
+    - main  
   tags:
     - docker
