@@ -67,8 +67,7 @@ public class LengthControllerTest {
 		// Dados de entrada
 		BigDecimal amount = BigDecimal.valueOf(100);
 		String from = "M";
-		String to = "CM";
-		when(repository.findByFromAndTo(from, to)).thenReturn(null);
+		String to = "KM"; // Unidade não suportada
 
 		// Espera-se uma RuntimeException
 		try {

@@ -1,6 +1,8 @@
 package br.com.projetoESOF.cambio_service.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,12 +18,15 @@ public class Cambio implements Serializable {
     private Long id;
 
     @Column(name = "from_currency", nullable = false, length = 3)
+    @Pattern(regexp = "^[A-Z]{3}$", message = "Currency code should be in ISO format, e.g., USD")
     private String from;
 
     @Column(name = "to_currency", nullable = false, length = 3)
+    @Pattern(regexp = "^[A-Z]{3}$", message = "Currency code should be in ISO format, e.g., USD")
     private String to;
 
     @Column(nullable = false)
+    @Positive(message = "Conversion factor must be positive")
     private BigDecimal conversionFactor;
 
     @Transient // it will not be persisted in the db
@@ -102,4 +107,5 @@ public class Cambio implements Serializable {
     public int hashCode() {
         return Objects.hash(id, from, to, conversionFactor, convertedValue, enviroment);
     }
+
 }
