@@ -62,6 +62,9 @@ public class LengthController {
 
         BigDecimal convertedValue = lengthService.calculateConvertedValue(value, length.getConversionFactor());
 
+        // Atribui o valor convertido ao objeto length
+        length.setConvertedValue(convertedValue);
+
         length.setEnviroment(environment.getProperty("local.server.port"));
 
         return length;

@@ -3,6 +3,7 @@ package br.com.projetoESOF.cambio_service;
 import br.com.projetoESOF.cambio_service.controller.CambioController;
 import br.com.projetoESOF.cambio_service.model.Cambio;
 import br.com.projetoESOF.cambio_service.repository.CambioRepository;
+import br.com.projetoESOF.cambio_service.service.CambioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,6 +25,9 @@ public class CambioControllerTest {
     @Mock
     private Environment environment;
 
+    @Mock
+    private CambioService cambioService; // Mockar o CambioService
+
     @InjectMocks
     private CambioController cambioController;
 
@@ -39,11 +43,19 @@ public class CambioControllerTest {
         String to = "BRL";
         BigDecimal conversionFactor = BigDecimal.valueOf(5);
         Cambio cambio = new Cambio(1L, from, to, conversionFactor, null, null);
+
+        // Simular o comportamento do repositório
         when(repository.findByFromAndTo(from, to)).thenReturn(cambio);
+
+        // Simular o comportamento do Environment
         when(environment.getProperty("local.server.port")).thenReturn("8000");
+
+        // Simular o cálculo da conversão
+        when(cambioService.calculateConvertedValue(amount, conversionFactor)).thenReturn(conversionFactor.multiply(amount).setScale(2));
 
         // Resultado esperado
         Cambio result = cambioController.getCambio(amount, from, to);
+
         BigDecimal expectedConvertedValue = conversionFactor.multiply(amount).setScale(2); // 5 * 100 = 500
 
         assertEquals(expectedConvertedValue, result.getConvertedValue());
@@ -57,12 +69,11 @@ public class CambioControllerTest {
         String from = "AAA";
         String to = "BRL";
 
-
         // Espera-se uma RuntimeException
         try {
             cambioController.getCambio(amount, from, to);
         } catch (RuntimeException e) {
-            assertEquals("Currency Unsuported.", e.getMessage());
+            assertEquals("Currency conversion from AAA to BRL is unsupported.", e.getMessage());
         }
     }
 }

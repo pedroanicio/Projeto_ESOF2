@@ -3,6 +3,7 @@ package br.com.projetoESOF.length_service;
 import br.com.projetoESOF.length_service.controller.LengthController;
 import br.com.projetoESOF.length_service.model.Length;
 import br.com.projetoESOF.length_service.repository.LengthRepository;
+import br.com.projetoESOF.length_service.service.LengthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,15 +37,20 @@ public class LengthControllerTest {
 	@Mock
 	private Environment environment;
 
+	@Mock
+	private LengthService lengthService;
+
 	@InjectMocks
 	private LengthController lengthController;
 
-	public LengthControllerTest() {
+	@BeforeEach
+	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 	}
 
+
 	@Test
-	public void testGetLentgh() {
+	public void testGetLength() {
 		// Dados de entrada
 		BigDecimal amount = BigDecimal.valueOf(100);
 		String from = "M";
@@ -53,6 +59,7 @@ public class LengthControllerTest {
 		Length length = new Length(1L, from, to, conversionFactor, null, null);
 		when(repository.findByFromAndTo(from, to)).thenReturn(length);
 		when(environment.getProperty("local.server.port")).thenReturn("8200");
+		when(lengthService.calculateConvertedValue(amount, conversionFactor)).thenReturn(conversionFactor.multiply(amount).setScale(2));
 
 		// Resultado esperado
 		Length result = lengthController.getLength(amount, from, to);
@@ -69,11 +76,14 @@ public class LengthControllerTest {
 		String from = "M";
 		String to = "KM"; // Unidade não suportada
 
+		// Simula que o repositório não encontra a unidade
+		when(repository.findByFromAndTo(from, to)).thenReturn(null);
+
 		// Espera-se uma RuntimeException
 		try {
 			lengthController.getLength(amount, from, to);
 		} catch (RuntimeException e) {
-			assertEquals("Unit Unsuported.", e.getMessage());
+			assertEquals("Invalid or unsupported unit type.", e.getMessage());
 		}
 	}
 }
