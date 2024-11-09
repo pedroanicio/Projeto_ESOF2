@@ -1,5 +1,6 @@
 package br.com.projetoESOF.cambio_service;
 
+import br.com.projetoESOF.cambio_service.controller.CambioController;
 import br.com.projetoESOF.cambio_service.model.Cambio;
 import br.com.projetoESOF.cambio_service.repository.CambioRepository;
 import org.junit.jupiter.api.Test;
@@ -7,8 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.math.BigDecimal;
@@ -45,7 +44,7 @@ public class CambioControllerTest {
 
         // Resultado esperado
         Cambio result = cambioController.getCambio(amount, from, to);
-        BigDecimal expectedConvertedValue = conversionFactor.multiply(amount).setScale(2);
+        BigDecimal expectedConvertedValue = conversionFactor.multiply(amount).setScale(2); // 5 * 100 = 500
 
         assertEquals(expectedConvertedValue, result.getConvertedValue());
         assertEquals("8000", result.getEnviroment());
@@ -55,9 +54,9 @@ public class CambioControllerTest {
     public void testGetCambioCurrencyUnsupported() {
         // Dados de entrada
         BigDecimal amount = BigDecimal.valueOf(100);
-        String from = "USD";
+        String from = "AAA";
         String to = "BRL";
-        when(repository.findByFromAndTo(from, to)).thenReturn(null);
+
 
         // Espera-se uma RuntimeException
         try {

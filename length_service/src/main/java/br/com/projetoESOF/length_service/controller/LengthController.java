@@ -1,7 +1,9 @@
 package br.com.projetoESOF.length_service.controller;
 
+import br.com.projetoESOF.length_service.exception.InvalidUnitException;
 import br.com.projetoESOF.length_service.model.Length;
 import br.com.projetoESOF.length_service.repository.LengthRepository;
+import br.com.projetoESOF.length_service.service.LengthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -28,6 +30,13 @@ public class LengthController {
     @Autowired // injeção de dependencia
     private LengthRepository repository;
 
+    @Autowired
+    private LengthService lengthService;
+
+
+    private boolean isValidUnit(String unit) {
+        return unit.equals("M") || unit.equals("CM") || unit.equals("MM");
+    }
 
     // http://localhost:8200/length-service/5/M/CM
     @Operation(description = "Get length from unit")
@@ -39,16 +48,22 @@ public class LengthController {
     ){
 
         logger.info("getLength is caller with -> {}, {} and {}", value, from, to);
+
+        // Validação de unidades
+        if (!isValidUnit(from) || !isValidUnit(to)) {
+            throw new InvalidUnitException("Invalid or unsupported unit type.");
+        }
+
         var length = repository.findByFromAndTo(from, to);
-        if (length == null) throw new RuntimeException("Unit Unsuported."); //unidade nao suportada
+        if (length == null) {
+            throw new InvalidUnitException("Unit conversion not supported.");
+        }
 
-        var port = environment.getProperty("local.server.port");
 
-        BigDecimal conversionFactor = length.getConversionFactor();
-        BigDecimal convertedValue = conversionFactor.multiply(value);
+        BigDecimal convertedValue = lengthService.calculateConvertedValue(value, length.getConversionFactor());
 
-        length.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
-        length.setEnviroment(port);
+        length.setEnviroment(environment.getProperty("local.server.port"));
+
         return length;
     }
 

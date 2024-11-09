@@ -1,7 +1,9 @@
-package br.com.projetoESOF.cambio_service;
+package br.com.projetoESOF.cambio_service.controller;
 
+import br.com.projetoESOF.cambio_service.exception.UnsupportedCurrencyException;
 import br.com.projetoESOF.cambio_service.model.Cambio;
 import br.com.projetoESOF.cambio_service.repository.CambioRepository;
+import br.com.projetoESOF.cambio_service.service.CambioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -28,6 +30,8 @@ public class CambioController {
     @Autowired // injeção de dependencia
     private CambioRepository repository;
 
+    @Autowired // injeção de dependencia
+    private CambioService cambioService;
 
     // http://localhost:8000/cambio-service/5/USD/BRL
     @Operation(description = "Get cambio from currency")
@@ -38,17 +42,26 @@ public class CambioController {
             @PathVariable("to")String to
     ){
 
-        logger.info("getCambio is caller with -> {}, {} and {}", amount, from, to);
-        var cambio = repository.findByFromAndTo(from, to);
-        if (cambio == null) throw new RuntimeException("Currency Unsuported."); //cambio nao suportado
+        logger.info("getCambio called with amount={}, from={}, to={}", amount, from, to);
 
-        var port = environment.getProperty("local.server.port");
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive.");
+        }
+        if (from.length() != 3 || to.length() != 3) {
+            throw new IllegalArgumentException("Currency codes must be exactly 3 characters.");
+        }
 
-        BigDecimal conversionFactor = cambio.getConversionFactor();
-        BigDecimal convertedValue = conversionFactor.multiply(amount);
+        Cambio cambio = repository.findByFromAndTo(from, to);
+        if (cambio == null) {
+            throw new UnsupportedCurrencyException("Currency conversion from " + from + " to " + to + " is unsupported.");
+        }
 
+        BigDecimal convertedValue = cambioService.calculateConvertedValue(amount, cambio.getConversionFactor());
         cambio.setConvertedValue(convertedValue.setScale(2, RoundingMode.CEILING));
-        cambio.setEnviroment(port);
+
+        cambio.setEnviroment(environment.getProperty("local.server.port"));
+
         return cambio;
+
     }
 }
